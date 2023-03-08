@@ -1,5 +1,6 @@
 import unittest
 import requests
+from textwrap import dedent
 
 
 class User:
@@ -58,28 +59,37 @@ def get_user_repos(username: str) -> dict:
     return repos_dict
 
 
+def create_string_from_repos_dict(repos: dict) -> str:
+    repos_string = ""
+    for repo_name, repo_url in repos.items():
+        repos_string += f"""
+                {repo_name}: {repo_url}"""
+    return repos_string
+
+
 def create_user_report_file(user: User, repos: dict) -> None:
-    report_file = open(f"{user.login}.txt", "w")
-    report_file.write(
-        f"""
-        Nome: {user.name}
-        Perfil: {user.html_url}
-        Número de repositórios públicos: {user.public_repos}
-        Número de seguidores: {user.followers}
-        Número de usuários seguidos: {user.following}
-        Repositórios:
-        """
-    )
-    report_file.close()
+    repos_string = create_string_from_repos_dict(repos)
+    with open(f"{user.login}.txt", "w") as report_file:
+        report_file.write(dedent(
+            f"""
+            Nome: {user.name}
+            Perfil: {user.html_url}
+            Número de repositórios públicos: {user.public_repos}
+            Número de seguidores: {user.followers}
+            Número de usuários seguidos: {user.following}
+            Repositórios: {repos_string}
+            """
+        ).strip("\n"))
 
 
-def make_user_report():
+def make_user_report() -> None:
     username = input(
         "Por favor, insira o nome do usuário sobre o qual o relatório deve ser gerado: ")
     user_instance = get_user(username)
-    print(user_instance.__repr__())
     repos_dict = get_user_repos(username)
     create_user_report_file(user_instance, repos_dict)
+    print("Relatório criado com  sucesso")
+    return None
 
 
 if __name__ == "__main__":
