@@ -3,8 +3,9 @@ import requests
 
 
 class User:
-    def __init__(self, name, url, public_repos, followers, following):
+    def __init__(self, name, login, url, public_repos, followers, following):
         self.name = name
+        self.login = login
         self.html_url = url
         self.public_repos = public_repos
         self.followers = followers
@@ -37,11 +38,12 @@ def get_user(username: str) -> User:
     r = requests.get(url=f"https://api.github.com/users/{username}")
     data = r.json()
     name = data['name']
+    login = data['login']
     url = data['url']
     public_repos = data['public_repos']
     followers = data['followers']
     following = data['following']
-    user = User(name, url, public_repos, followers, following)
+    user = User(name, login, url, public_repos, followers, following)
     return user
 
 
@@ -56,8 +58,19 @@ def get_user_repos(username: str) -> dict:
     return repos_dict
 
 
-def user_report(user: User, repos: dict) -> None:
-    pass
+def create_user_report_file(user: User, repos: dict) -> None:
+    report_file = open(f"{user.login}.txt", "w")
+    report_file.write(
+        f"""
+        Nome: {user.name}
+        Perfil: {user.html_url}
+        Número de repositórios públicos: {user.public_repos}
+        Número de seguidores: {user.followers}
+        Número de usuários seguidos: {user.following}
+        Repositórios:
+        """
+    )
+    report_file.close()
 
 
 def make_user_report():
@@ -66,6 +79,7 @@ def make_user_report():
     user_instance = get_user(username)
     print(user_instance.__repr__())
     repos_dict = get_user_repos(username)
+    create_user_report_file(user_instance, repos_dict)
 
 
 if __name__ == "__main__":
