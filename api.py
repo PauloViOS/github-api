@@ -46,7 +46,14 @@ def get_user(username: str) -> User:
 
 
 def get_user_repos(username: str) -> dict:
-    pass
+    r = requests.get(url=f"https://api.github.com/users/{username}/repos")
+    data = r.json()
+    repos_dict = {}
+    for repo in data:
+        repo_name = repo["name"]
+        repo_url = repo["html_url"]
+        repos_dict[repo_name] = repo_url
+    return repos_dict
 
 
 def user_report(user: User, repos: dict) -> None:
@@ -58,6 +65,7 @@ def make_user_report():
         "Por favor, insira o nome do usuário sobre o qual o relatório deve ser gerado: ")
     user_instance = get_user(username)
     print(user_instance.__repr__())
+    repos_dict = get_user_repos(username)
 
 
 if __name__ == "__main__":
