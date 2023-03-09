@@ -39,7 +39,24 @@ class TestMethods(unittest.TestCase):
         assert response != None
 
     def test_create_user_instance(self):
-        pass
+        parameters = {
+            'name': 'Paulo',
+            'login': 'paulo_do_github',
+            'html_url': 'https://github.com/paulo_do_github',
+            'public_repos': 10,
+            'followers': 500,
+            'following': 1000,
+        }
+        expected_user = User(
+            parameters['name'],
+            parameters['login'],
+            parameters['html_url'],
+            parameters['public_repos'],
+            parameters['followers'],
+            parameters['following']
+        )
+        for prop, value in vars(expected_user).items():
+            assert value == parameters[prop]
 
     def test_get_user_repos(self):
         pass
