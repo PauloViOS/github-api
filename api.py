@@ -48,7 +48,7 @@ def get_user(username: str) -> User:
     """Função que chama o endpoint da API sobre as informções do usuário,
     serializa as informações recebidas e cria uma instância de User com elas.
     Enquanto um usuário com o nome fornecido não for encontrado,
-    a função irá pedir por um novo nome e bater na API.S"""
+    a função irá pedir por um novo nome e bater na API."""
     r = requests.get(url=f"https://api.github.com/users/{username}")
     data = r.json()
     while 'message' in data.keys():
