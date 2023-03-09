@@ -34,13 +34,21 @@ class TestMethods(unittest.TestCase):
     def test_create_user_instance(self):
         pass
 
+    def test_get_user_repos(self):
+        pass
+
+    def test_create_string_from_dict(self):
+        pass
+
+    def test_create_user_file(self):
+        pass
+
 
 def get_user(username: str) -> User:
     """Função que chama o endpoint da API sobre as informções do usuário,
     serializa as informações recebidas e cria uma instância de User com elas.
     Enquanto um usuário com o nome fornecido não for encontrado,
-    a função irá pedir por um novo nome e bater na API.
-    """
+    a função irá pedir por um novo nome e bater na API.S"""
     r = requests.get(url=f"https://api.github.com/users/{username}")
     data = r.json()
     while 'message' in data.keys():
