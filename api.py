@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import requests
 from textwrap import dedent
 
@@ -30,6 +31,12 @@ class TestMethods(unittest.TestCase):
         user = get_user('PauloViOS')
         for param in parameters:
             self.assertTrue(hasattr(user, param))
+
+    def test_make_get_user_request(self):
+        with patch('requests.get') as mock_get:
+            mock_get.return_value.ok = True
+            response = get_user('PauloViOS')
+        assert response != None
 
     def test_create_user_instance(self):
         pass
@@ -79,7 +86,8 @@ def get_user_repos(username: str) -> dict:
 
 
 def create_string_from_repos_dict(repos: dict) -> str:
-    """Função para transformar as informações do dict em string, uma vez que o método write aceita apenas strings"""
+    """Função para transformar as informações do dict em string,
+    uma vez que o método write aceita apenas strings"""
     repos_string = ""
     for repo_name, repo_url in repos.items():
         repos_string += f"""
@@ -115,5 +123,5 @@ def make_user_report() -> None:
 
 
 if __name__ == "__main__":
-    # unittest.main()
-    make_user_report()
+    unittest.main()
+    # make_user_report()
