@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase, main
 from unittest.mock import patch
 import requests
 from textwrap import dedent
@@ -18,7 +18,7 @@ class User:
         return rep
 
 
-class TestMethods(unittest.TestCase):
+class TestMethods(TestCase):
 
     def test_user_class_has_minimal_parameters(self):
         """
@@ -34,7 +34,8 @@ class TestMethods(unittest.TestCase):
 
     def test_make_get_user_request(self):
         """
-        Teste unitário que mocka a chamada da API do github
+        Teste unitário que mocka a chamada da API do
+        github com infos do usuário
         """
         with patch('requests.get') as mock_get:
             mock_get.return_value.ok = True
@@ -183,5 +184,5 @@ def make_user_report() -> None:
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=10)
+    main(verbosity=1)
     # make_user_report()
