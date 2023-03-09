@@ -59,6 +59,12 @@ class TestMethods(unittest.TestCase):
             assert value == parameters[prop]
 
     def test_get_user_repos(self):
+        with patch('requests.get') as mock_get:
+            mock_get.return_value.ok = True
+            response = get_user_repos('PauloViOS')
+        assert response != None
+
+    def test_create_dict_from_user_repos(self):
         pass
 
     def test_create_string_from_dict(self):
