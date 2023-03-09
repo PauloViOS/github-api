@@ -33,12 +33,19 @@ class TestMethods(unittest.TestCase):
             self.assertTrue(hasattr(user, param))
 
     def test_make_get_user_request(self):
+        """
+        Teste unitário que mocka a chamada da API do github
+        """
         with patch('requests.get') as mock_get:
             mock_get.return_value.ok = True
             response = get_user('PauloViOS')
         assert response != None
 
     def test_create_user_instance(self):
+        """
+        Teste unitário que verifica propriedades da classe Usuário
+        dados determinados parâmetros
+        """
         parameters = {
             'name': 'Paulo',
             'login': 'paulo_do_github',
@@ -59,6 +66,10 @@ class TestMethods(unittest.TestCase):
             assert value == parameters[prop]
 
     def test_get_user_repos(self):
+        """
+        Teste unitário que mocka a chamada da API
+        do github com infos dos repos do usuário
+        """
         with patch('requests.get') as mock_get:
             mock_get.return_value.ok = True
             response = get_user_repos('PauloViOS')
@@ -68,7 +79,22 @@ class TestMethods(unittest.TestCase):
         pass
 
     def test_create_string_from_dict(self):
-        pass
+        """
+        Teste unitário que verifica a criação da string a
+        partir do dict com informações dos repositórios
+        do usuário
+        """
+        test_dict = {
+            'a': 1,
+            'b': 2,
+            'c': 3,
+        }
+        expected_string = """
+                a: 1
+                b: 2
+                c: 3"""
+        result_string = create_string_from_repos_dict(test_dict)
+        assert expected_string == result_string
 
     def test_create_user_file(self):
         pass
@@ -157,5 +183,5 @@ def make_user_report() -> None:
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=10)
     # make_user_report()
