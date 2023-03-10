@@ -66,6 +66,11 @@ class TestMethods(TestCase):
         assert response != None
 
     def test_create_dict_from_user_repos(self):
+        """
+        Teste unitário que faz a verificação da criação
+        do dict com as informações dos repos do usuário
+        pesquisado
+        """
         mock_response = [
             {
                 "id": 1,
