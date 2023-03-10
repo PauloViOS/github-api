@@ -1,5 +1,7 @@
 from unittest import TestCase, main
-from unittest.mock import patch
+from unittest.mock import patch, Mock
+import json
+from requests import Response
 
 import github_api
 from user_class import User
@@ -64,7 +66,50 @@ class TestMethods(TestCase):
         assert response != None
 
     def test_create_dict_from_user_repos(self):
-        pass
+        mock_response = [
+            {
+                "id": 1,
+                "node_id": "node_id",
+                "name": "primeiro_repo",
+                "full_name": "user/primeiro_repo",
+                "html_url": "primeiro_repo.com",
+            },
+            {
+                "id": 2,
+                "node_id": "node_id",
+                "name": "segundo_repo",
+                "full_name": "user/segundo_repo",
+                "html_url": "segundo_repo.com",
+            },
+            {
+                "id": 3,
+                "node_id": "node_id",
+                "name": "terceiro_repo",
+                "full_name": "user/terceiro_repo",
+                "html_url": "terceiro_repo.com",
+            },
+            {
+                "id": 4,
+                "node_id": "node_id",
+                "name": "quarto_repo",
+                "full_name": "user/quarto_repo",
+                "html_url": "quarto_repo.com",
+            }
+        ]
+        expected_dict = {
+            "primeiro_repo": "primeiro_repo.com",
+            "segundo_repo": "segundo_repo.com",
+            "terceiro_repo": "terceiro_repo.com",
+            "quarto_repo": "quarto_repo.com",
+        }
+
+        with patch('requests.get') as mock_get:
+            mock_resp = Mock()
+            mock_resp.json.return_value = mock_response
+            mock_get.return_value = mock_resp
+            repos_dict = github_api.get_user_repos('user')
+
+        assert repos_dict == expected_dict
 
     def test_create_string_from_dict(self):
         """
