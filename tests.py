@@ -10,6 +10,13 @@ from user_class import User
 
 class TestMethods(TestCase):
 
+    expected_repo_dict = {
+        "primeiro_repo": "primeiro_repo.com",
+        "segundo_repo": "segundo_repo.com",
+        "terceiro_repo": "terceiro_repo.com",
+        "quarto_repo": "quarto_repo.com",
+    }
+
     def test_user_class_has_minimal_parameters(self):
         """
         Teste unitário relativo ao primeiro passo do desafio, esse cenário
@@ -38,12 +45,12 @@ class TestMethods(TestCase):
         dados determinados parâmetros
         """
         parameters = {
-            'name': 'Paulo',
-            'login': 'paulo_do_github',
-            'html_url': 'https://github.com/paulo_do_github',
-            'public_repos': 10,
-            'followers': 500,
-            'following': 1000,
+            'name': 'name',
+            'login': 'login',
+            'html_url': 'html_url',
+            'public_repos': 'public_repos',
+            'followers': 'followers',
+            'following': 'following',
         }
         expected_user = User(
             parameters['name'],
@@ -102,12 +109,6 @@ class TestMethods(TestCase):
                 "html_url": "quarto_repo.com",
             }
         ]
-        expected_dict = {
-            "primeiro_repo": "primeiro_repo.com",
-            "segundo_repo": "segundo_repo.com",
-            "terceiro_repo": "terceiro_repo.com",
-            "quarto_repo": "quarto_repo.com",
-        }
 
         with patch('requests.get') as mock_get:
             mock_resp = Mock()
@@ -115,7 +116,7 @@ class TestMethods(TestCase):
             mock_get.return_value = mock_resp
             repos_dict = github_api.get_user_repos('user')
 
-        assert repos_dict == expected_dict
+        assert repos_dict == self.expected_repo_dict
 
     def test_create_string_from_dict(self):
         """
@@ -144,12 +145,6 @@ class TestMethods(TestCase):
             'followers',
             'following'
         )
-        expected_dict = {
-            "primeiro_repo": "primeiro_repo.com",
-            "segundo_repo": "segundo_repo.com",
-            "terceiro_repo": "terceiro_repo.com",
-            "quarto_repo": "quarto_repo.com",
-        }
         expected_file_input = dedent(
             """
             Nome: name
@@ -166,7 +161,8 @@ class TestMethods(TestCase):
         ).strip("\n")
         open_mock = mock_open()
         with patch("github_api.open", open_mock, create=True):
-            github_api.create_user_report_file(test_user, expected_dict)
+            github_api.create_user_report_file(
+                test_user, self.expected_repo_dict)
 
         open_mock.assert_called_with(f"{test_user.login}.txt", "w")
         open_mock.return_value.write.assert_called_once_with(
