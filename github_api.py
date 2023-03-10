@@ -11,12 +11,11 @@ def get_user(username: str) -> User:
     a função irá pedir por um novo nome e bater na API.
     """
     r = requests.get(url=f"https://api.github.com/users/{username}")
-    data = r.json()
-    while 'message' in data.keys():
+    while r.status_code == 404:
         username = input(
             "Usuário inexistente. Por favor, insira um usuário válido do GitHub: ")
         r = requests.get(url=f"https://api.github.com/users/{username}")
-        data = r.json()
+    data = r.json()
     name = data['name']
     login = data['login']
     url = data['url']
