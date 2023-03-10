@@ -1,7 +1,8 @@
 from unittest import TestCase, main
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, mock_open
 import json
 from requests import Response
+from textwrap import dedent
 
 import github_api
 from user_class import User
@@ -135,7 +136,41 @@ class TestMethods(TestCase):
         assert expected_string == result_string
 
     def test_create_user_file(self):
-        pass
+        test_user = User(
+            'name',
+            'login',
+            'html_url',
+            'public_repos',
+            'followers',
+            'following'
+        )
+        expected_dict = {
+            "primeiro_repo": "primeiro_repo.com",
+            "segundo_repo": "segundo_repo.com",
+            "terceiro_repo": "terceiro_repo.com",
+            "quarto_repo": "quarto_repo.com",
+        }
+        expected_file_input = dedent(
+            """
+            Nome: name
+            Perfil: html_url
+            Número de repositórios públicos: public_repos
+            Número de seguidores: followers
+            Número de usuários seguidos: following
+            Repositórios: 
+                primeiro_repo: primeiro_repo.com
+                segundo_repo: segundo_repo.com
+                terceiro_repo: terceiro_repo.com
+                quarto_repo: quarto_repo.com
+            """
+        ).strip("\n")
+        open_mock = mock_open()
+        with patch("github_api.open", open_mock, create=True):
+            github_api.create_user_report_file(test_user, expected_dict)
+
+        open_mock.assert_called_with(f"{test_user.login}.txt", "w")
+        open_mock.return_value.write.assert_called_once_with(
+            expected_file_input)
 
 
 if __name__ == "__main__":
